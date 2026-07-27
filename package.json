@@ -1,0 +1,12 @@
+{
+  "name": "welfare-compass",
+  "version": "1.0.0",
+  "private": true,
+  "description": "복지나침반 - 노약자와 시각장애인을 위한 AI 복지서비스 안내 웹앱",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "vercel dev"
+  }
+}

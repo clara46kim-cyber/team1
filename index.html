@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>복지나침반 - 나에게 맞는 복지서비스 찾기</title>
+<style>
+  :root {
+    --color-bg: #ffffff;
+    --color-text: #10202f;
+    --color-navy: #0b2f4a;
+    --color-navy-dark: #071d30;
+    --color-accent: #0f6b4c;
+    --color-accent-dark: #0a4d37;
+    --color-border: #10202f;
+    --color-panel: #f4f7f7;
+    --color-focus: #b0490c;
+    --status-high-bg: #1b6e3f;
+    --status-check-bg: #92400e;
+    --status-unclear-bg: #40474f;
+    --base-font-size: 20px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { font-size: var(--base-font-size); }
+
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+    line-height: 1.6;
+  }
+
+  a { color: var(--color-accent-dark); }
+
+  .skip-link {
+    position: absolute;
+    left: -999px;
+    top: auto;
+    background: var(--color-navy);
+    color: #fff;
+    padding: 0.75rem 1rem;
+    z-index: 100;
+  }
+  .skip-link:focus {
+    left: 1rem;
+    top: 1rem;
+  }
+
+  header.app-header {
+    background: var(--color-navy);
+    color: #ffffff;
+    padding: 2rem 1.25rem;
+    text-align: center;
+  }
+
+  .app-header .compass-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    margin-bottom: 0.75rem;
+    font-size: 1.6rem;
+  }
+
+  .app-header h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    letter-spacing: -0.01em;
+  }
+
+  .app-header p {
+    margin: 0 auto;
+    max-width: 42rem;
+    font-size: 1.1rem;
+    color: #e7edf2;
+  }
+
+  main {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 4rem 1.25rem;
+  }
+
+  .limits-box {
+    background: #fff8ec;
+    border: 2px solid var(--status-check-bg);
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    font-size: 1rem;
+  }
+  .limits-box strong { display: block; margin-bottom: 0.35rem; }
+
+  form {
+    background: var(--color-panel);
+    border: 2px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  fieldset {
+    border: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+  }
+
+  legend {
+    font-weight: 700;
+    font-size: 1.3rem;
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+
+  .field {
+    margin-bottom: 1.25rem;
+  }
+
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .hint {
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: #33454f;
+    display: block;
+    margin-top: 0.2rem;
+  }
+
+  input[type="number"],
+  input[type="text"],
+  select,
+  textarea {
+    width: 100%;
+    font-size: 1.05rem;
+    padding: 0.75rem 0.85rem;
+    border: 2px solid var(--color-border);
+    border-radius: 0.6rem;
+    background: #ffffff;
+    color: var(--color-text);
+    font-family: inherit;
+  }
+
+  textarea { min-height: 6rem; resize: vertical; }
+
+  .radio-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #ffffff;
+    border: 2px solid var(--color-border);
+    border-radius: 0.6rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .radio-option input[type="radio"] {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  .radio-option label {
+    margin: 0;
+    font-weight: 400;
+    font-size: 1.05rem;
+  }
+
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  button:focus-visible,
+  a:focus-visible {
+    outline: 4px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-radius: 0.75rem;
+    border: 2px solid transparent;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: #ffffff;
+  }
+  .btn-primary:hover { background: var(--color-accent-dark); }
+  .btn-primary:disabled {
+    background: #6b7c85;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    background: #ffffff;
+    color: var(--color-navy);
+    border-color: var(--color-navy);
+  }
+  .btn-secondary:hover { background: #e7edf2; }
+
+  .btn-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+  }
+  .btn-row .btn { width: auto; flex: 1 1 10rem; }
+
+  #status-region {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  #error-region {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    border: 2px solid #8a1c1c;
+    background: #fdecec;
+    border-radius: 0.75rem;
+    font-size: 1.05rem;
+  }
+
+  #results-section {
+    margin-top: 2rem;
+  }
+
+  #results-section h2 {
+    font-size: 1.5rem;
+  }
+
+  #summary-text {
+    font-size: 1.1rem;
+    background: var(--color-panel);
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    border: 2px solid var(--color-border);
+  }
+
+  .policy-card {
+    border: 2px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 1.25rem 1.4rem;
+    margin-top: 1.25rem;
+    background: #ffffff;
+  }
+
+  .policy-card h3 {
+    font-size: 1.3rem;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .status-badge {
+    display: inline-block;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    margin-bottom: 0.75rem;
+  }
+  .status-high { background: var(--status-high-bg); }
+  .status-check { background: var(--status-check-bg); }
+  .status-unclear { background: var(--status-unclear-bg); }
+
+  .policy-field {
+    margin-bottom: 0.75rem;
+  }
+  .policy-field dt {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #33454f;
+  }
+  .policy-field dd {
+    margin: 0.2rem 0 0 0;
+    font-size: 1.05rem;
+  }
+
+  .notice-box {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: #fff8ec;
+    border: 2px solid var(--status-check-bg);
+    border-radius: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #33454f;
+    padding: 2rem 1.25rem;
+  }
+
+  @media (max-width: 480px) {
+    :root { --base-font-size: 19px; }
+    .app-header h1 { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">본문 바로가기</a>
+
+  <header class="app-header">
+    <div class="compass-mark" aria-hidden="true">🧭</div>
+    <h1>복지나침반</h1>
+    <p>내 상황을 입력하면, 확인해 볼 만한 복지서비스를 쉬운 말로 안내해 드립니다.</p>
+  </header>
+
+  <main id="main-content">
+    <div class="limits-box" role="note">
+      <strong>꼭 알아두세요</strong>
+      복지나침반은 실제로 복지 혜택을 받을 수 있는지 확정하지 않습니다.
+      제공된 정책 목록 안에서 확인해 볼 만한 서비스를 안내할 뿐이며,
+      정확한 자격 여부는 반드시 담당 기관에서 최종 확인해야 합니다.
+    </div>
+
+    <form id="welfare-form" novalidate>
+      <fieldset>
+        <legend>내 상황 입력하기</legend>
+
+        <div class="field">
+          <label for="age">1. 나이</label>
+          <input type="number" id="age" name="age" min="0" max="120" inputmode="numeric" required aria-required="true" />
+        </div>
+
+        <div class="field">
+          <label for="region">2. 거주지역</label>
+          <span class="hint" id="region-hint">예: 서울특별시 강남구</span>
+          <input type="text" id="region" name="region" required aria-required="true" aria-describedby="region-hint" />
+        </div>
+
+        <div class="field">
+          <span id="disability-label" style="display:block; font-weight:700; font-size:1.05rem; margin-bottom:0.4rem;">3. 장애 여부</span>
+          <div class="radio-group" role="radiogroup" aria-labelledby="disability-label">
+            <div class="radio-option">
+              <input type="radio" id="disability-yes" name="hasDisability" value="예" required />
+              <label for="disability-yes">있음</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="disability-no" name="hasDisability" value="아니오" />
+              <label for="disability-no">없음</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span id="alone-label" style="display:block; font-weight:700; font-size:1.05rem; margin-bottom:0.4rem;">4. 1인 가구 여부</span>
+          <div class="radio-group" role="radiogroup" aria-labelledby="alone-label">
+            <div class="radio-option">
+              <input type="radio" id="alone-yes" name="livesAlone" value="예" required />
+              <label for="alone-yes">혼자 산다</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="alone-no" name="livesAlone" value="아니오" />
+              <label for="alone-no">가족과 함께 산다</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="incomeStatus">5. 소득 상황</label>
+          <select id="incomeStatus" name="incomeStatus" required aria-required="true">
+            <option value="">선택해 주세요</option>
+            <option value="국민기초생활수급자">국민기초생활수급자</option>
+            <option value="차상위계층">차상위계층</option>
+            <option value="중위소득 이하로 생각됨">중위소득 이하로 생각됨</option>
+            <option value="중위소득 초과로 생각됨">중위소득 초과로 생각됨</option>
+            <option value="잘 모름">잘 모름</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="mostNeededHelp">6. 현재 가장 필요한 도움</label>
+          <select id="mostNeededHelp" name="mostNeededHelp" required aria-required="true">
+            <option value="">선택해 주세요</option>
+            <option value="생활비 지원">생활비 지원</option>
+            <option value="돌봄·요양 지원">돌봄·요양 지원</option>
+            <option value="의료비 지원">의료비 지원</option>
+            <option value="주거 지원">주거 지원</option>
+            <option value="이동·보행 지원">이동·보행 지원</option>
+            <option value="정보·상담 지원">정보·상담 지원</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="additionalInfo">7. 추가로 알려주고 싶은 상황 (선택)</label>
+          <span class="hint" id="additional-hint">예: 최근 넘어져서 걷기가 힘들어요, 시력이 많이 나빠졌어요 등</span>
+          <textarea id="additionalInfo" name="additionalInfo" aria-describedby="additional-hint"></textarea>
+        </div>
+      </fieldset>
+
+      <button type="submit" class="btn btn-primary" id="submit-btn">맞춤 복지 찾아보기</button>
+    </form>
+
+    <div id="status-region" role="status" aria-live="polite"></div>
+    <div id="error-region" role="alert" aria-live="assertive" hidden></div>
+
+    <section id="results-section" hidden aria-labelledby="results-heading">
+      <h2 id="results-heading">추천 결과</h2>
+      <p id="summary-text"></p>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" id="speak-btn">🔊 결과 읽어주기</button>
+        <button type="button" class="btn btn-secondary" id="stop-speak-btn">⏹ 읽기 중지</button>
+      </div>
+
+      <div id="cards-container"></div>
+
+      <p class="notice-box" id="notice-text"></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>복지나침반은 정책 확인을 돕는 안내 도구이며, 실제 수급 자격을 결정하지 않습니다.</p>
+  </footer>
+
+  <script>
+    const form = document.getElementById("welfare-form");
+    const submitBtn = document.getElementById("submit-btn");
+    const statusRegion = document.getElementById("status-region");
+    const errorRegion = document.getElementById("error-region");
+    const resultsSection = document.getElementById("results-section");
+    const summaryText = document.getElementById("summary-text");
+    const cardsContainer = document.getElementById("cards-container");
+    const noticeText = document.getElementById("notice-text");
+    const speakBtn = document.getElementById("speak-btn");
+    const stopSpeakBtn = document.getElementById("stop-speak-btn");
+
+    const STATUS_CLASS_MAP = {
+      "확인해 볼 가능성이 높음": "status-high",
+      "추가 확인 필요": "status-check",
+      "현재 입력만으로 판단하기 어려움": "status-unclear",
+    };
+
+    let lastSpokenText = "";
+
+    function setLoading(isLoading) {
+      submitBtn.disabled = isLoading;
+      statusRegion.textContent = isLoading
+        ? "입력하신 내용을 바탕으로 복지서비스를 찾고 있습니다. 잠시만 기다려 주세요."
+        : "";
+    }
+
+    function showError(message) {
+      errorRegion.textContent = message;
+      errorRegion.hidden = false;
+    }
+
+    function clearError() {
+      errorRegion.hidden = true;
+      errorRegion.textContent = "";
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.textContent = str == null ? "" : String(str);
+      return div.innerHTML;
+    }
+
+    function renderResults(data) {
+      summaryText.textContent = data.summary || "";
+      noticeText.textContent =
+        data.notice || "정확한 대상 여부는 공식 기관에서 최종 확인해야 합니다.";
+
+      cardsContainer.innerHTML = "";
+
+      const speechParts = [];
+      if (data.summary) speechParts.push(data.summary);
+
+      if (!data.recommendations || data.recommendations.length === 0) {
+        const emptyMsg = document.createElement("p");
+        emptyMsg.textContent = "입력하신 내용과 관련성이 높은 정책을 찾지 못했습니다. 다른 상황을 추가로 입력해 보세요.";
+        cardsContainer.appendChild(emptyMsg);
+      } else {
+        data.recommendations.forEach((rec, index) => {
+          const badgeClass = STATUS_CLASS_MAP[rec.status] || "status-unclear";
+
+          const card = document.createElement("article");
+          card.className = "policy-card";
+          card.innerHTML = `
+            <h3>${index + 1}. ${escapeHtml(rec.policyName)}</h3>
+            <span class="status-badge ${badgeClass}">${escapeHtml(rec.status)}</span>
+            <dl>
+              <div class="policy-field">
+                <dt>추천 이유</dt>
+                <dd>${escapeHtml(rec.reason)}</dd>
+              </div>
+              <div class="policy-field">
+                <dt>추가로 확인할 조건</dt>
+                <dd>${escapeHtml(rec.checkRequired)}</dd>
+              </div>
+              <div class="policy-field">
+                <dt>지원 내용</dt>
+                <dd>${escapeHtml(rec.support)}</dd>
+              </div>
+              <div class="policy-field">
+                <dt>신청 또는 문의 방법</dt>
+                <dd>${escapeHtml(rec.application)}</dd>
+              </div>
+              <div class="policy-field">
+                <dt>공식 담당 기관</dt>
+                <dd>${escapeHtml(rec.officialAgency)}</dd>
+              </div>
+              <div class="policy-field">
+                <dt>공식 출처 링크</dt>
+                <dd><a href="${escapeHtml(rec.officialUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(rec.officialUrl)}</a></dd>
+              </div>
+            </dl>
+          `;
+          cardsContainer.appendChild(card);
+
+          speechParts.push(
+            `${index + 1}번, ${rec.policyName}. 판단 결과, ${rec.status}. ` +
+            `추천 이유, ${rec.reason}. 추가로 확인할 조건, ${rec.checkRequired}. ` +
+            `지원 내용, ${rec.support}. 신청 또는 문의 방법, ${rec.application}. ` +
+            `담당 기관, ${rec.officialAgency}.`
+          );
+        });
+      }
+
+      if (data.notice) speechParts.push(data.notice);
+      lastSpokenText = speechParts.join(" ");
+
+      resultsSection.hidden = false;
+      resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      clearError();
+      resultsSection.hidden = true;
+      window.speechSynthesis && window.speechSynthesis.cancel();
+
+      const formData = new FormData(form);
+      const age = formData.get("age");
+      const region = formData.get("region");
+      const hasDisability = formData.get("hasDisability");
+      const livesAlone = formData.get("livesAlone");
+      const incomeStatus = formData.get("incomeStatus");
+      const mostNeededHelp = formData.get("mostNeededHelp");
+      const additionalInfo = formData.get("additionalInfo");
+
+      if (!age || !region || !hasDisability || !livesAlone || !incomeStatus || !mostNeededHelp) {
+        showError("입력하지 않은 항목이 있습니다. 모든 항목을 채워주세요.");
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const response = await fetch("/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            age,
+            region,
+            hasDisability,
+            livesAlone,
+            incomeStatus,
+            mostNeededHelp,
+            additionalInfo,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showError(data.error || "지금은 결과를 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.");
+          return;
+        }
+
+        renderResults(data);
+      } catch (err) {
+        showError("인터넷 연결을 확인하시고 잠시 후 다시 시도해 주세요.");
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    speakBtn.addEventListener("click", function () {
+      if (!("speechSynthesis" in window)) {
+        showError("이 브라우저에서는 음성 읽기 기능을 사용할 수 없습니다.");
+        return;
+      }
+      if (!lastSpokenText) return;
+
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(lastSpokenText);
+      utterance.lang = "ko-KR";
+      utterance.rate = 0.95;
+      window.speechSynthesis.speak(utterance);
+    });
+
+    stopSpeakBtn.addEventListener("click", function () {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    });
+  </script>
+</body>
+</html>
